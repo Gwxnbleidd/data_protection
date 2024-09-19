@@ -101,10 +101,14 @@ def login_clk():
         global current_user
         current_user = db.find_user(username)
         if current_user.active:
-            if login(username, pwd, db):
+            if current_user.password == "":
                 current_user = current_user.username
-                window.destroy()
-                open_main_window()
+                open_change_pwd_window()
+            else:
+                if login(username, pwd, db):
+                    current_user = current_user.username
+                    window.destroy()
+                    open_main_window()
         else:
             result_label['text'] = 'Пользователь заблокирован'
             return False

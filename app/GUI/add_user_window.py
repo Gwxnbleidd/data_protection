@@ -7,7 +7,7 @@ def open_window():
 
     # Создание окна
     window = tk.Tk()
-    window.title("Авторизация")
+    window.title("Добавление нового пользователя")
     window.geometry("300x200+800+300")
 
     # Надписи
