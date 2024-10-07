@@ -3,6 +3,7 @@ from tkinter import ttk
 import re
 
 from app.utils.database import Database
+from app.utils.encryption import coding
 
 def check_restrictions(pwd):
   lowercase = r"[a-zа-я]"
@@ -23,7 +24,7 @@ def open_window():
 
     window = tk.Tk()
     window.title("Смена пароля")
-    window.geometry("300x270+800+300")
+    window.geometry("300x300+800+300")
 
     
     old_pwd_label = ttk.Label(window, text='Старый пароль')
@@ -59,7 +60,12 @@ def change_password():
     current_user = db.find_user(current_user)
 
     old_pwd = old_pwd_entry.get()
-    if old_pwd != current_user.password:
+
+    if  current_user.password != '':
+        if coding(current_user.username, old_pwd) != current_user.password:
+            result_label['text'] = 'Старый пароль неверен!'
+            return
+    elif old_pwd !='':
         result_label['text'] = 'Старый пароль неверен!'
         return
     
@@ -70,7 +76,8 @@ def change_password():
             result_label['text'] = 'Пароль должен содержать\nцифру, знак арифметической \nоперации, заглавную \nи строчную буквы!'
             return
     if new_pwd == confirm_new_pwd:
-        db.change_password(username=current_user.username, new_password=new_pwd)
+        new_password = coding(current_user.username, new_pwd)
+        db.change_password(username=current_user.username, new_password=new_password)
         window.destroy()
     else:
         result_label['text'] = 'Новые пароли не одинаковые!'
