@@ -6,6 +6,7 @@ from app.GUI.users_list_window import open_window as open_users_list_window
 from app.GUI.add_user_window import open_window as open_add_user_window
 from app.GUI.limits_window import open_window as open_limits_window
 from app.utils.database import Database
+from app.utils.encryption import coding
 
 db = Database()
 
@@ -101,11 +102,16 @@ def login_clk():
         global current_user
         current_user = db.find_user(username)
         if current_user.active:
-            if current_user.password == "":
-                current_user = current_user.username
-                open_change_pwd_window()
+            if current_user.password == "" :
+                if pwd =="":
+                    current_user = current_user.username
+                    result_label['text'] = ''
+                    open_change_pwd_window()
+                else:
+                    raise Exception('Неверный логин или пароль!')
             else:
-                if login(username, pwd, db):
+                hash_pwd = coding(username, pwd)
+                if login(username, hash_pwd, db):
                     current_user = current_user.username
                     window.destroy()
                     open_main_window()
@@ -164,7 +170,8 @@ def show_about():
     about_window.title("О программе")
     about_window.geometry("330x200+800+300")
     
-    label = tk.Label(about_window, text="А-13-21 \nГайчуков Дмитрий \nВ29 \nНаличие строчных и прописных букв, \nцифр и знаков арифметических операций.")
+    label = tk.Label(about_window, text="А-13-21 \nГайчуков Дмитрий \nВ29 \n\
+                                         Наличие строчных и прописных букв, \nцифр и знаков арифметических операций.")
     label.place(x=10, y=10, width=320, height=120)
 
     button = tk.Button(about_window, text="Закрыть", command=about_window.destroy)
