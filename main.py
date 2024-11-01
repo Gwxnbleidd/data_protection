@@ -1,7 +1,7 @@
 import tkinter as tk
 
 from app.utils.database import User, Database
-from app.GUI.main_window import login_window
+from app.GUI.secret_phrase import open_window as secret_phrase_window
 
 
 database = Database()
@@ -13,4 +13,4 @@ except Exception as e:
     pass
 
 if __name__ == '__main__':
-    login_window('mainloop')
+    secret_phrase_window()

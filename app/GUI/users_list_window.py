@@ -21,7 +21,7 @@ def create_user_list(users: dict):
 
     # Вставка данных пользователей в список
     for user in users.values():
-        tree.insert("", tk.END, values=(user.username, not user.active, user.restrictions))
+        tree.insert("", tk.END, values=(user['username'], not user['active'], user['restrictions']))
 
     return tree
 

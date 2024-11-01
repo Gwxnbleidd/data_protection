@@ -1,11 +1,7 @@
-import string
+import hashlib
+import os
+from Crypto.Cipher import AES
 
-# def form_alphabet():
-#     english_symbols = string.printable
-#     russian_symbols = (''.join([chr(i) for i in range(ord('а'), ord('я') + 1)]) 
-#                        + ''.join([chr(i) for i in range(ord('А'), ord('Я') + 1)]))
-#     alphabet =russian_symbols + english_symbols[:-4]
-#     return alphabet
 
 def form_key(password: str):
     key = []
@@ -21,8 +17,8 @@ def rearrangement(login, password):
     # Формирование ключа
     key = form_key(password)
 
-    if len(key) > len(login):
-        key = key[0:len(login)]
+    # if len(key) > len(login):
+    #     key = key[0:len(login)]
     
     while len(login) % len(key) != 0:
         login +=' '
@@ -35,7 +31,7 @@ def rearrangement(login, password):
     # Перестановка
     c = []
     for block in blocks:
-        for j in range(len(key)):
+        for j in range(len(block)):
             c.append(block[key[j]])
 
     return ''.join([str(c_i) for c_i in c])
@@ -43,7 +39,7 @@ def rearrangement(login, password):
 def gamming(message, password):
     a = ord(password[0])
     c = ord(password[1])
-    g0 = ord(password[3])
+    g0 = ord(password[2])
 
     cryptotext = []
     for i in range(len(message)):
@@ -52,10 +48,12 @@ def gamming(message, password):
     return ''.join([str(el) for el in cryptotext])
 
 def coding(login, password):
+    if len(password) > len(login):
+        password = password[0:len(login)]
 
     hash_password_part_1 = rearrangement(login, password)
     hash_password_part_2 = gamming(hash_password_part_1, password)
     return hash_password_part_2
 
 
-# print(coding('admin', 'Aa1+'))
+print(coding('adminwj fwk wk dw', 'AaAa1+'))

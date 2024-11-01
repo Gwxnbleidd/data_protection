@@ -23,7 +23,7 @@ def create_user_list():
 
     # Вставка данных пользователей в список
     for i, user in enumerate(users.values()):
-        tree.insert("", tk.END, values=(user.username, not user.active, user.restrictions))
+        tree.insert("", tk.END, values=(user['username'], not user['active'], user['restrictions']))
 
     # Создание обработчика клика на строки
     def on_click(event):
@@ -36,15 +36,15 @@ def create_user_list():
             # Изменение состояния флагов
 
             if column_name == 'password_limit':
-                users[name].restrictions = not users[name].restrictions
-                db.change_restriction_user(username=name, restrictions=users[name].restrictions)
+                users[name]['restrictions'] = not users[name]['restrictions']
+                db.change_restriction_user(username=name, restrictions=users[name]['restrictions'])
             elif column_name == 'blocking':
-                users[name].active = not users[name].active
-                db.change_active_user(username=name, active=users[name].active)
+                users[name]['active'] = not users[name]['active']
+                db.change_active_user(username=name, active=users[name]['active'])
             
 
             # Обновление данных в Treeview
-            tree.item(row, values=(users[name].username, not users[name].active, users[name].restrictions))
+            tree.item(row, values=(users[name]['username'], not users[name]['active'], users[name]['restrictions']))
 
     tree.bind("<Button-1>", on_click)
 
