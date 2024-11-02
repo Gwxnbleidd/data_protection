@@ -41,7 +41,7 @@ def open_main_window():
     main_window = tk.Tk()
     main_window.title("Главное окно")
     main_window.geometry("300x310+800+300")
-
+    main_window.protocol("WM_DELETE_WINDOW", lambda: close_program(main_window))
     # --- Кнопки ---
 
     change_password_button = ttk.Button(main_window, text="Сменить пароль", command=open_change_pwd_window)
@@ -128,7 +128,7 @@ def login_window(arg = None):
     window = tk.Tk()
     window.title("Авторизация")
     window.geometry("300x200+800+300")
-
+    window.protocol("WM_DELETE_WINDOW", lambda: close_program(window))
     # Надписи
     username_label = ttk.Label(window, text="Логин:")
     password_label = ttk.Label(window, text="Пароль:")

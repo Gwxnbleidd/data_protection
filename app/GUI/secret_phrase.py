@@ -6,6 +6,7 @@ import os
 from app.GUI.main_window import login_window
 from app.utils.encryption import generate_key_using_phrase, form_decrypt_file, encrypt_file
 from app.utils.database import User, Database
+from app.utils.exit_program import close_program
 
 def open_window():
 
@@ -14,6 +15,7 @@ def open_window():
     window = tk.Tk()
     window.title("Ввод парольной фразы")
     window.geometry("300x200+800+300")
+    window.protocol("WM_DELETE_WINDOW", lambda: close_program(window))
 
     # Надписи
     phrase_label = ttk.Label(window, text="Введите парольную фразу:")
@@ -71,7 +73,7 @@ def click_processing():
 
     db = Database()
     database = db.read()
-    print(database)
+
     if database.get('admin'):
         window.destroy()
         login_window()
