@@ -1,7 +1,10 @@
 import hashlib
 import os
 from Crypto.Cipher import AES
+from Crypto.Util.Padding import pad, unpad
+import json
 
+from app.utils.database import Database
 
 def form_key(password: str):
     key = []
@@ -16,9 +19,6 @@ def form_key(password: str):
 def rearrangement(login, password):
     # Формирование ключа
     key = form_key(password)
-
-    # if len(key) > len(login):
-    #     key = key[0:len(login)]
     
     while len(login) % len(key) != 0:
         login +=' '
@@ -56,4 +56,53 @@ def coding(login, password):
     return hash_password_part_2
 
 
-print(coding('adminwj fwk wk dw', 'AaAa1+'))
+def generate_key_using_phrase(phrase, salt):
+    return hashlib.pbkdf2_hmac('sha256', phrase.encode(), salt, 100000)
+
+# Шифрование данных
+def encrypt_data(key, plaintext):
+    cipher = AES.new(key, AES.MODE_CBC)
+    ciphertext = cipher.encrypt(pad(plaintext.encode(), AES.block_size))
+    
+    # Возвращаем вектор и зашифрованные данные
+    return cipher.iv + ciphertext
+
+# Расшифровка данных
+def decrypt_data(key, ciphertext):
+    iv = ciphertext[:AES.block_size]
+    cipher = AES.new(key, AES.MODE_CBC, iv)
+    return unpad(cipher.decrypt(ciphertext[AES.block_size:]), AES.block_size).decode()
+
+# Хеширование данных с использованием SHA-256
+def calculate_hash(data):
+    hasher = hashlib.sha256()
+    hasher.update(data)
+    return hasher.hexdigest()
+
+def encrypt_file(key, file, crypt_file):
+    db = Database(file)
+    data = db.read()
+
+    # Преобразуем словарь в строку JSON
+    json_data = json.dumps(data)
+
+    crypt_data = encrypt_data(key, json_data)
+    with open(crypt_file, 'wb+') as file:
+        file.write(crypt_data)
+
+def form_decrypt_file(key):
+
+    with open('database.txt', 'rb+') as file:
+        crypt_data = file.read()
+
+    text = decrypt_data(key, crypt_data)
+    
+    # Загружаем данные из JSON-строки
+    data = json.loads(text)
+
+    with open('temp_database.txt', 'w') as file:
+        # Преобразуем словарь в строку JSON
+        json_data = json.dumps(data, indent=4) 
+        file.write(json_data)
+
+

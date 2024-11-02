@@ -7,6 +7,7 @@ from app.GUI.add_user_window import open_window as open_add_user_window
 from app.GUI.limits_window import open_window as open_limits_window
 from app.utils.database import Database
 from app.utils.encryption import coding
+from app.utils.exit_program import close_program
 
 db = Database()
 
@@ -48,7 +49,7 @@ def open_main_window():
     add_user_button = ttk.Button(main_window, text="Добавить пользователя", command=my_open_add_user_window)
     block_user_button = ttk.Button(main_window, text="Блокировка / Ограничения", command=my_open_limits_window)
     change_user = ttk.Button(main_window, text="Сменить пользователя", command=exit_window_and_login_window)
-    exit_button = ttk.Button(main_window, text="Выйти", command=exit)
+    exit_button = ttk.Button(main_window, text="Выйти", command=lambda: close_program(main_window))
     global res_label
     res_label = ttk.Label(main_window, text='')
 
@@ -79,7 +80,7 @@ def login_attempts(func):
         if not res:
             count += 1
             if count == 3:
-                exit()
+                close_program(window)
             result_label['text'] = f"Неверный логин или пароль\nОсталось попыток: {3-count}!"
         else:
             count = 0
@@ -140,7 +141,7 @@ def login_window(arg = None):
 
     # Кнопки
     login_button = ttk.Button(window, text="Войти", command=login_clk)
-    exit_button = ttk.Button(window, text="Выйти", command=exit)
+    exit_button = ttk.Button(window, text="Выйти", command=lambda: close_program(window))
 
     # Текст результата
     global result_label
