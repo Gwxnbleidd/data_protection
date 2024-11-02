@@ -50,20 +50,14 @@ def click_processing():
 
     global key
     phrase = phrase_entry.get()
+
+    key = generate_key_using_phrase(phrase)
     
     if not os.path.exists('database.txt'):
         admin = User(username='admin', password='')
         database = Database('database.txt')
         database.add_user(admin)
-        salt = os.urandom(16)
-        with open('salt.txt', 'wb') as file:
-            file.write(salt)
-        key = generate_key_using_phrase(phrase, salt)    
         encrypt_file(key, 'database.txt', 'database.txt')
-    else:
-        with open('salt.txt', 'rb') as file:
-            salt = file.read()
-        key = generate_key_using_phrase(phrase, salt)
 
     try:
         form_decrypt_file(key)

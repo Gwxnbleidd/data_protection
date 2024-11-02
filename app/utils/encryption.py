@@ -56,8 +56,10 @@ def coding(login, password):
     return hash_password_part_2
 
 
-def generate_key_using_phrase(phrase, salt):
-    return hashlib.pbkdf2_hmac('sha256', phrase.encode(), salt, 100000)
+def generate_key_using_phrase(phrase):
+    key = hashlib.sha256(phrase.encode()).hexdigest()
+    key = bytes.fromhex(key[:32]) 
+    return key
 
 # Шифрование данных
 def encrypt_data(key, plaintext):
