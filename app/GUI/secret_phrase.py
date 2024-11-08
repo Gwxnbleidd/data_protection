@@ -8,6 +8,22 @@ from app.utils.encryption import generate_key_using_phrase, form_decrypt_file, e
 from app.utils.database import User, Database
 from app.utils.exit_program import close_program
 
+def open_error_window():
+    global error_window
+    error_window = tk.Tk()
+    error_window.title("Ошибка!")
+    error_window.geometry("225x50+800+300")
+
+    # Надписи
+    phrase_label = ttk.Label(error_window, text="Неверная парольная фраза!")
+    # Кнопки
+    confirm_button = ttk.Button(error_window, text="ОК", command=exit)
+
+    phrase_label.grid(row=0,column=0)
+    confirm_button.grid(row=1,column=0)
+    return
+    
+
 def open_window():
 
     # Создание окна
@@ -50,21 +66,21 @@ def click_processing():
 
     global key
     phrase = phrase_entry.get()
-
     key = generate_key_using_phrase(phrase)
     
     if not os.path.exists('database.txt'):
         admin = User(username='admin', password='')
         database = Database('database.txt')
-        database.add_user(admin)
+        database.add_user(admin)   
         encrypt_file(key, 'database.txt', 'database.txt')
-
+    
     try:
         form_decrypt_file(key)
     except ValueError:
-        result_label['text'] = 'Неверная парольная фраза'
+        window.destroy()
+        open_error_window()
         return
-
+    
     db = Database()
     database = db.read()
 
