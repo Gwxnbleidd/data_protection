@@ -39,7 +39,7 @@ def open_window():
     # Поля ввода
     global result_label
     global phrase_entry
-    phrase_entry = ttk.Entry(window)
+    phrase_entry = ttk.Entry(window, show='*')
 
     # Кнопки
     confirm_button = ttk.Button(window, text="ОК", command=click_processing)

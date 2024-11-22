@@ -42,5 +42,5 @@ def add_new_user():
         db.add_user(user)
         result_label['text'] = f'Вы добавили пользователя \nс именем {username}'
 
-    except Exception as e:
+    except Exception:
         result_label['text'] = 'Пользователь с таким \nименем уже существует'

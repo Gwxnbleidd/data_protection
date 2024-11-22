@@ -7,7 +7,7 @@ class User(BaseModel):
     active: bool = True
     restrictions: bool = True
 
-class Database():
+class Database:
     def __init__(self, filename = 'temp_database.txt') -> None:
         self._filename = filename
 
